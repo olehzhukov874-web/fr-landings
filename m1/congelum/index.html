@@ -389,7 +389,7 @@ body.free .disc,body:not(.free) .nodisc{display:none}
             <p class="phonewhy">Le numéro sert à l’appel de confirmation. Il est transmis uniquement au vendeur, au service de confirmation des commandes et au livreur.</p>
             <input type="hidden" name="kw" value="fr-m1-congelum">
             <button class="btn btn-primary btn-cta" type="submit">COMMANDER L’ORIGINAL</button>
-            <p class="today-line">🛒 Aujourd’hui ont déjà commandé <b class="todayN">—</b> personnes</p>
+            <p class="today-line">🛒 Aujourd’hui, déjà <b class="todayN">—</b> personnes ont commandé</p>
             <p class="form-note">Aucun acompte · vous vérifiez à la livraison · 🔒 chiffrement SSL</p>
           </form>
           <div class="ok-msg"><div class="ok-big"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
@@ -692,7 +692,7 @@ body.free .disc,body:not(.free) .nodisc{display:none}
             <p class="phonewhy">Le numéro sert à l’appel de confirmation. Il est transmis uniquement au vendeur, au service de confirmation des commandes et au livreur.</p>
             <input type="hidden" name="kw" value="fr-m1-congelum">
             <button class="btn btn-primary btn-cta" type="submit">COMMANDER L’ORIGINAL</button>
-            <p class="today-line">🛒 Aujourd’hui ont déjà commandé <b class="todayN">—</b> personnes</p>
+            <p class="today-line">🛒 Aujourd’hui, déjà <b class="todayN">—</b> personnes ont commandé</p>
             <p class="form-note">Aucun acompte · vous vérifiez à la livraison · 🔒 chiffrement SSL</p>
           </form>
           <div class="ok-msg"><div class="ok-big"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg></div>
@@ -754,7 +754,7 @@ body.free .disc,body:not(.free) .nodisc{display:none}
   try{ var st=+localStorage.getItem('lp_stock'); if(st>6&&st<stock) stock=st; }catch(e){}   // остаток не растёт при перезагрузке
   function rs(){ sn.textContent=stock; sn2.textContent=stock; sb.style.width=Math.max(6,(stock/stockMax)*100)+'%'; try{ localStorage.setItem('lp_stock',stock); }catch(e){} }
   rs();
-  var L={"cc": "+33", "phMin": 9, "phMax": 9, "ph0": true, "fem": "[ae]$", "t1m": "vient de passer commande", "t1f": "vient de passer commande", "t2m": "vient de commander 2 boîtes", "t2f": "vient de commander 2 boîtes", "agoMin": " min", "agoH": " h", "agoY": "hier", "agoD": " j", "names": ["Marie", "Jean", "Nathalie", "Michel", "Isabelle", "Nicolas", "Sophie", "Laurent", "Camille", "Julien", "Sylvie", "Thomas", "Christine", "Olivier", "Julie", "Sébastien", "Céline", "Bernard", "Valérie", "David"], "cities": ["Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Montpellier", "Strasbourg", "Bordeaux", "Lille", "Rennes", "Reims", "Toulon", "Saint-Étienne", "Le Havre", "Grenoble", "Dijon", "Angers", "Nîmes", "Villeurbanne"]};   // локаль тостов/дат/телефона (генерится сборкой из i18n)
+  var L={"cc": "+33", "phMin": 9, "phMax": 9, "ph0": true, "fem": "[ae]$", "t1m": "vient de passer commande", "t1f": "vient de passer commande", "t2m": "vient de commander 2 boîtes", "t2f": "vient de commander 2 boîtes", "agoMin": "il y a {n} min", "agoH": "il y a {n} h", "agoY": "hier", "agoD": "il y a {n} j", "names": ["Marie", "Jean", "Nathalie", "Michel", "Isabelle", "Nicolas", "Sophie", "Laurent", "Camille", "Julien", "Sylvie", "Thomas", "Christine", "Olivier", "Julie", "Sébastien", "Céline", "Bernard", "Valérie", "David"], "cities": ["Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Montpellier", "Strasbourg", "Bordeaux", "Lille", "Rennes", "Reims", "Toulon", "Saint-Étienne", "Le Havre", "Grenoble", "Dijon", "Angers", "Nîmes", "Villeurbanne"]};   // локаль тостов/дат/телефона (генерится сборкой из i18n)
   var NAMES=L.names, CITIES=L.cities;
   function drop(){
     if(stock>6){
@@ -801,8 +801,9 @@ body.free .disc,body:not(.free) .nodisc{display:none}
   var AGO=[14,42,96,180,260,420];   // первые шесть — свежие, дальше растёт плавно (отзывов теперь 72)
   Array.prototype.forEach.call(document.querySelectorAll('.ago'),function(el){
     var i=+el.getAttribute('data-i'), m=(i<AGO.length?AGO[i]:Math.round(600+i*i*3.2+i*180)), t;
-    if(m<60) t=m+L.agoMin; else if(m<1440) t=Math.round(m/60)+L.agoH;
-    else if(m<2880) t=L.agoY; else t=Math.round(m/1440)+L.agoD;
+    var agoF=function(n,s){return s.indexOf('{n}')>=0?s.replace('{n}',n):n+s;};   // «vor {n} Min.» / «{n} min temu»
+    if(m<60) t=agoF(m,L.agoMin); else if(m<1440) t=agoF(Math.round(m/60),L.agoH);
+    else if(m<2880) t=L.agoY; else t=agoF(Math.round(m/1440),L.agoD);
     el.textContent=t;
   });
 
